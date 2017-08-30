@@ -1,4 +1,5 @@
 # Internal libraries
+import re
 
 # External libraries
 from flask import Flask, render_template, request
@@ -17,11 +18,18 @@ Routes:
 def index():
     return render_template('index.html')
 
-@app.route('/get')
-def get_data():
+@app.route('/get/bytag')
+def getbytag():
     result = requests.get( request.args.get('url'))
     soup = BeautifulSoup(result.content, "lxml")
     results = soup.find_all( request.args.get('tag'))
+    return render_template('result.html', results=results)
+
+@app.route('/get/intext')
+def findintext():
+    result = requests.get( request.args.get('url'))
+    soup = BeautifulSoup(result.content, "lxml")
+    results = soup.body.findAll(text=re.compile( request.args.get('text') ))
     return render_template('result.html', results=results)
 
 # Run App
