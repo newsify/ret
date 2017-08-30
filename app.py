@@ -32,6 +32,14 @@ def findintext():
     results = soup.body.findAll(text=re.compile( request.args.get('text') ))
     return render_template('result.html', results=results)
 
+@app.route('/get/inattr')
+def findinattr():
+    result = requests.get( request.args.get('url'))
+    soup = BeautifulSoup(result.content, "lxml")
+    attribute = request.args.get('attr')
+    results = soup.findAll(attrs={request.args.get('attr') : re.compile( request.args.get('text') )})
+    return render_template('result.html', results=results)
+
 # Run App
 if __name__ == '__main__':
     app.run(host= '0.0.0.0',port='5000')
