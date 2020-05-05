@@ -2,7 +2,7 @@
 import re
 
 # External libraries
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import requests
 from bs4 import BeautifulSoup
 
@@ -39,6 +39,20 @@ def findinattr():
     attribute = request.args.get('attr')
     results = soup.findAll(attrs={request.args.get('attr') : re.compile( request.args.get('text') )})
     return render_template('result.html', results=results)
+
+# API routes
+@app.route('/api/get/tag')
+def api_getbytag():
+    result = requests.get( request.args.get('url'))
+    soup = BeautifulSoup(result.content, "lxml")
+    results = soup.find_all( request.args.get('tag'))
+    items = []
+
+    for item in results:
+        items.append(item.text)
+
+    return jsonify(items)
+
 
 # Run App
 if __name__ == '__main__':
