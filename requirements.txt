@@ -1,4 +1,4 @@
-flask==0.10.1
+flask>=1.0.0
 requests
 bs4
 lxml
